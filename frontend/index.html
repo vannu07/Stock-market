@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <title>Real-time Stock Market AI Dashboard</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Market Data...</div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="main-dashboard" class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>StockAI Pro</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Market Status</span>
+                        <span class="stat-value" id="market-status">OPEN</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Update</span>
+                        <span class="stat-value" id="last-update">--:--:--</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn-primary" id="refresh-btn">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                    <button class="btn btn-secondary" id="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Watchlist</h3>
+                    <div class="watchlist" id="watchlist">
+                        <!-- Stock items will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Portfolio</h3>
+                    <div class="portfolio-summary" id="portfolio-summary">
+                        <div class="portfolio-item">
+                            <span class="portfolio-label">Total Value</span>
+                            <span class="portfolio-value" id="portfolio-value">$0.00</span>
+                        </div>
+                        <div class="portfolio-item">
+                            <span class="portfolio-label">P&L</span>
+                            <span class="portfolio-value" id="portfolio-pnl">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Stock Overview Cards -->
+                <div class="overview-cards">
+                    <div class="card market-overview">
+                        <h3><i class="fas fa-globe"></i> Market Overview</h3>
+                        <div class="market-indicators" id="market-indicators">
+                            <!-- Market indicators will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="card sentiment-overview">
+                        <h3><i class="fas fa-brain"></i> AI Sentiment Analysis</h3>
+                        <div class="sentiment-gauge" id="sentiment-gauge">
+                            <canvas id="sentimentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Details Section -->
+                <div class="stock-details-section">
+                    <div class="section-header">
+                        <h2>Stock Analysis</h2>
+                        <div class="stock-selector">
+                            <select id="stock-selector" class="stock-select">
+                                <option value="AAPL">Apple Inc. (AAPL)</option>
+                                <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
+                                <option value="MSFT">Microsoft Corp. (MSFT)</option>
+                                <option value="AMZN">Amazon.com Inc. (AMZN)</option>
+                                <option value="TSLA">Tesla Inc. (TSLA)</option>
+                                <option value="META">Meta Platforms Inc. (META)</option>
+                                <option value="NVDA">NVIDIA Corp. (NVDA)</option>
+                                <option value="NFLX">Netflix Inc. (NFLX)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="stock-details-grid">
+                        <!-- Price Chart -->
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-candlestick"></i> Price Chart</h3>
+                                <div class="chart-controls">
+                                    <button class="btn btn-sm" data-period="1D">1D</button>
+                                    <button class="btn btn-sm active" data-period="1W">1W</button>
+                                    <button class="btn btn-sm" data-period="1M">1M</button>
+                                    <button class="btn btn-sm" data-period="3M">3M</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Stock Info -->
+                        <div class="card stock-info-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-info-circle"></i> Stock Information</h3>
+                            </div>
+                            <div class="stock-info" id="stock-info">
+                                <div class="stock-price">
+                                    <span class="current-price" id="current-price">$0.00</span>
+                                    <span class="price-change" id="price-change">+0.00 (0.00%)</span>
+                                </div>
+                                <div class="stock-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Volume</span>
+                                        <span class="metric-value" id="volume">0</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Market Cap</span>
+                                        <span class="metric-value" id="market-cap">$0</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">P/E Ratio</span>
+                                        <span class="metric-value" id="pe-ratio">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Predictions -->
+                        <div class="card predictions-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-robot"></i> AI Predictions</h3>
+                            </div>
+                            <div class="predictions-content" id="predictions-content">
+                                <div class="prediction-models">
+                                    <div class="model-prediction">
+                                        <span class="model-name">LSTM Neural Network</span>
+                                        <span class="prediction-value" id="lstm-prediction">$0.00</span>
+                                        <span class="confidence" id="lstm-confidence">0%</span>
+                                    </div>
+                                    <div class="model-prediction">
+                                        <span class="model-name">Random Forest</span>
+                                        <span class="prediction-value" id="rf-prediction">$0.00</span>
+                                        <span class="confidence" id="rf-confidence">0%</span>
+                                    </div>
+                                    <div class="model-prediction">
+                                        <span class="model-name">XGBoost</span>
+                                        <span class="prediction-value" id="xgb-prediction">$0.00</span>
+                                        <span class="confidence" id="xgb-confidence">0%</span>
+                                    </div>
+                                    <div class="ensemble-prediction">
+                                        <span class="model-name">Ensemble Model</span>
+                                        <span class="prediction-value" id="ensemble-prediction">$0.00</span>
+                                        <span class="confidence" id="ensemble-confidence">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sentiment Analysis -->
+                        <div class="card sentiment-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-comments"></i> Sentiment Analysis</h3>
+                            </div>
+                            <div class="sentiment-content" id="sentiment-content">
+                                <div class="sentiment-score">
+                                    <div class="score-circle" id="sentiment-circle">
+                                        <span class="score-value" id="sentiment-score">0.0</span>
+                                    </div>
+                                    <div class="sentiment-breakdown">
+                                        <div class="sentiment-item positive">
+                                            <span class="sentiment-label">Positive</span>
+                                            <span class="sentiment-percent" id="positive-percent">0%</span>
+                                        </div>
+                                        <div class="sentiment-item negative">
+                                            <span class="sentiment-label">Negative</span>
+                                            <span class="sentiment-percent" id="negative-percent">0%</span>
+                                        </div>
+                                        <div class="sentiment-item neutral">
+                                            <span class="sentiment-label">Neutral</span>
+                                            <span class="sentiment-percent" id="neutral-percent">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Feed -->
+                        <div class="card news-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-newspaper"></i> Latest News</h3>
+                            </div>
+                            <div class="news-content" id="news-content">
+                                <!-- News items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Trading Modal -->
+    <div id="trading-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Trade Stock</h3>
+                <span class="close" id="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="trade-form">
+                    <div class="form-group">
+                        <label>Stock Symbol</label>
+                        <input type="text" id="trade-symbol" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Action</label>
+                        <select id="trade-action">
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="trade-quantity" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="trade-price" step="0.01" readonly>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="execute-trade">Execute Trade</button>
+                        <button class="btn btn-secondary" id="cancel-trade">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/trading.js') }}"></script>
+</body>
+</html>
