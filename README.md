@@ -2,7 +2,7 @@
 
 <!-- 1. Custom Banner -->
 <p align="center">
-  <img src="assets/banner.png" alt="Stock Market Dashboard Banner" width="600"/>
+  <img src="assets /banner.png" alt="Stock Market Dashboard Banner" width="600"/>
 </p>
 
 <!-- 2. Reliable Shields.io Badges -->
