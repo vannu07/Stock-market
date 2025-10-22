@@ -112,7 +112,8 @@ def get_historical_data(symbol):
         data = stock_collector.get_historical_data(symbol, days)
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception(f"Exception in get_historical_data for symbol '{symbol}'")
+        return jsonify({'error': 'An internal error has occurred.'}), 500
 
 @app.route('/api/sentiment/<symbol>')
 def get_sentiment_analysis(symbol):
@@ -121,7 +122,8 @@ def get_sentiment_analysis(symbol):
         sentiment_data = sentiment_collector.get_detailed_sentiment(symbol)
         return jsonify(sentiment_data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception(f"Exception in get_sentiment_analysis for symbol '{symbol}'")
+        return jsonify({'error': 'An internal error has occurred.'}), 500
 
 @app.route('/api/predictions/<symbol>')
 def get_predictions(symbol):
@@ -130,7 +132,8 @@ def get_predictions(symbol):
         predictions = ensemble_predictor.get_all_predictions(symbol)
         return jsonify(predictions)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception(f"Exception in get_predictions for symbol '{symbol}'")
+        return jsonify({'error': 'An internal error has occurred.'}), 500
 
 @app.route('/api/news/<symbol>')
 def get_news(symbol):
