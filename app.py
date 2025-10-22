@@ -101,7 +101,8 @@ def get_stock_data(symbol):
         return jsonify(result)
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception(f"Exception in get_stock_data for symbol '{symbol}'")
+        return jsonify({'error': 'An internal error has occurred.'}), 500
 
 @app.route('/api/historical/<symbol>')
 def get_historical_data(symbol):
