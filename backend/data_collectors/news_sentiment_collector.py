@@ -9,7 +9,6 @@ from typing import Dict, List
 import feedparser
 import nltk
 import numpy as np
-import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
