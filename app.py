@@ -18,9 +18,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Add backend folder to sys.path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 
-from data_collectors.news_sentiment_collector import NewsSentimentCollector
-
 # Import custom modules
+from data_collectors.news_sentiment_collector import NewsSentimentCollector
 from data_collectors.stock_data_collector import StockDataCollector
 from ml_models.ensemble_predictor import EnsemblePredictor
 from utils.config import Config
@@ -116,7 +115,8 @@ def get_stock_data(symbol):
         return jsonify(result)
 
     except Exception as e:
-        logger.exception(f"Exception in get_stock_data for symbol '{symbol}'")
+        safe_symbol = (symbol or "").replace("\r", "").replace("\n", "")
+        logger.exception(f"Exception in get_stock_data for symbol '{safe_symbol}'")
         return jsonify({"error": "An internal error has occurred."}), 500
 
 
@@ -128,7 +128,8 @@ def get_historical_data(symbol):
         data = stock_collector.get_historical_data(symbol, days)
         return jsonify(data)
     except Exception as e:
-        logger.exception(f"Exception in get_historical_data for symbol '{symbol}'")
+        safe_symbol = (symbol or "").replace("\r", "").replace("\n", "")
+        logger.exception(f"Exception in get_historical_data for symbol '{safe_symbol}'")
         return jsonify({"error": "An internal error has occurred."}), 500
 
 
@@ -139,7 +140,10 @@ def get_sentiment_analysis(symbol):
         sentiment_data = sentiment_collector.get_detailed_sentiment(symbol)
         return jsonify(sentiment_data)
     except Exception as e:
-        logger.exception(f"Exception in get_sentiment_analysis for symbol '{symbol}'")
+        safe_symbol = (symbol or "").replace("\r", "").replace("\n", "")
+        logger.exception(
+            f"Exception in get_sentiment_analysis for symbol '{safe_symbol}'"
+        )
         return jsonify({"error": "An internal error has occurred."}), 500
 
 
@@ -150,7 +154,8 @@ def get_predictions(symbol):
         predictions = ensemble_predictor.get_all_predictions(symbol)
         return jsonify(predictions)
     except Exception as e:
-        logger.exception(f"Exception in get_predictions for symbol '{symbol}'")
+        safe_symbol = (symbol or "").replace("\r", "").replace("\n", "")
+        logger.exception(f"Exception in get_predictions for symbol '{safe_symbol}'")
         return jsonify({"error": "An internal error has occurred."}), 500
 
 
@@ -205,7 +210,8 @@ def handle_subscribe(data):
     """Handle subscription to stock updates"""
     symbol = data.get("symbol")
     if symbol in active_stocks:
-        logger.info(f"Client subscribed to {symbol}")
+        safe_symbol = (symbol or "").replace("\r", "").replace("\n", "")
+        logger.info(f"Client subscribed to {safe_symbol}")
         emit("subscribed", {"symbol": symbol})
 
 
