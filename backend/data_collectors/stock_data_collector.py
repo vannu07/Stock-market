@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 import numpy as np
-import pandas as pd
 import requests
 import yfinance as yf
 
