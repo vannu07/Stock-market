@@ -154,7 +154,8 @@ def get_news(symbol):
             'count': len(all_news)
         })
     except Exception as e:
-        logger.error(f"Error getting news for {symbol}: {e}")
+        safe_symbol = (symbol or "").replace('\r', '').replace('\n', '')
+        logger.error(f"Error getting news for {safe_symbol}: {e}")
         return jsonify({
             'symbol': symbol,
             'articles': [],
