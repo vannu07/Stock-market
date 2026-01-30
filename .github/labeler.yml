@@ -1,0 +1,30 @@
+# Add labels based on file paths
+documentation:
+  - '**/*.md'
+  - 'docs/**/*'
+
+python:
+  - '**/*.py'
+
+frontend:
+  - 'frontend/**/*'
+  - '**/*.html'
+  - '**/*.css'
+  - '**/*.js'
+
+backend:
+  - 'backend/**/*'
+  - 'app.py'
+
+tests:
+  - 'test_*.py'
+  - '**/test_*.py'
+  - '**/*_test.py'
+
+workflows:
+  - '.github/workflows/**/*'
+
+dependencies:
+  - 'requirements.txt'
+  - 'package.json'
+  - 'package-lock.json'
