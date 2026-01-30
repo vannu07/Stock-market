@@ -3,7 +3,6 @@ import logging
 import os
 import re
 import sys
-import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
