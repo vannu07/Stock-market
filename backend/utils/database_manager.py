@@ -1,8 +1,10 @@
-import sqlite3
-import os
-from datetime import datetime
 import json
+import os
+import sqlite3
+from datetime import datetime
+
 import pandas as pd
+
 
 class DatabaseManager:
     def __init__(self, db_path='../database/stock_market.db'):

@@ -4,8 +4,8 @@ Quick test script to verify the real-time stock market ML project setup.
 Run this script to check if all components are working correctly.
 """
 
-import sys
 import os
+import sys
 import traceback
 from datetime import datetime
 
@@ -145,7 +145,8 @@ def test_sentiment_analysis():
     print_header("Testing Sentiment Analysis")
     
     try:
-        from data_collectors.news_sentiment_collector import NewsSentimentCollector
+        from data_collectors.news_sentiment_collector import \
+            NewsSentimentCollector
         collector = NewsSentimentCollector()
         
         # Test connections

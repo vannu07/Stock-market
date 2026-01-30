@@ -4,8 +4,8 @@ Complete setup test for Real-time ML Stock Dashboard
 This script tests all components to ensure the project is fully functional.
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -67,7 +67,8 @@ def test_sentiment_analysis():
     """Test sentiment analysis"""
     print("\n🧠 Testing Sentiment Analysis...")
     try:
-        from data_collectors.news_sentiment_collector import NewsSentimentCollector
+        from data_collectors.news_sentiment_collector import \
+            NewsSentimentCollector
         collector = NewsSentimentCollector()
         
         # Test connection

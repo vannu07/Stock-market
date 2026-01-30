@@ -1,21 +1,22 @@
-import requests
-import feedparser
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import time
-import logging
-from typing import Dict, List, Optional
 import json
+import logging
+import os
 import re
 import sys
-import os
+import time
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional
+
+import feedparser
+import nltk
+import numpy as np
+import pandas as pd
+import requests
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
 
 # Download required NLTK data
 try:

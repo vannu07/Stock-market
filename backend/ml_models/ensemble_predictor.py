@@ -1,5 +1,6 @@
-from datetime import datetime
 import random
+from datetime import datetime
+
 
 class EnsemblePredictor:
     """A simple ensemble predictor class"""

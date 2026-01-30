@@ -1,28 +1,29 @@
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+import json
+import logging
+import os
 import sqlite3
+import sys
 import threading
 import time
-import schedule
 from datetime import datetime, timedelta
-import json
-import os
-import sys
-import logging
 from logging.handlers import RotatingFileHandler
+
+import schedule
+from flask import Flask, jsonify, render_template, request
+from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 
 # Add current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Add backend folder to sys.path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 
+from data_collectors.news_sentiment_collector import NewsSentimentCollector
 # Import custom modules
 from data_collectors.stock_data_collector import StockDataCollector
-from data_collectors.news_sentiment_collector import NewsSentimentCollector
 from ml_models.ensemble_predictor import EnsemblePredictor
-from utils.database_manager import DatabaseManager
 from utils.config import Config
+from utils.database_manager import DatabaseManager
 
 # Configure logging
 log_level = getattr(logging, Config.LOG_LEVEL.upper(), logging.INFO)
