@@ -345,7 +345,7 @@ class StockDataCollector:
                 results["alpha_vantage"] = response.status_code == 200
             else:
                 results["alpha_vantage"] = False
-        except:
+        except Exception:
             results["alpha_vantage"] = False
 
         return results
