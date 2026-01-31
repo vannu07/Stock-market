@@ -5,6 +5,7 @@ import re
 import sys
 from datetime import datetime, timedelta
 from typing import Dict, List
+
 import feedparser
 import nltk
 import numpy as np
