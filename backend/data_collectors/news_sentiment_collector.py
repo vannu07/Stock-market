@@ -21,8 +21,9 @@ try:
     nltk.download("punkt", quiet=True)
     nltk.download("wordnet", quiet=True)
     nltk.download("vader_lexicon", quiet=True)
-except Exception:
-    pass
+except Exception as e:
+    # NLTK data may already be installed; log the failure and continue.
+    logging.warning("Failed to download some NLTK data resources: %s", e)
 
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
