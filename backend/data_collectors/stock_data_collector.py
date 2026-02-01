@@ -334,7 +334,7 @@ class StockDataCollector:
             ticker = yf.Ticker("AAPL")
             hist = ticker.history(period="1d")
             results["yahoo_finance"] = not hist.empty
-        except:
+        except Exception:
             results["yahoo_finance"] = False
 
         # Test Alpha Vantage
