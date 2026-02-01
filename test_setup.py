@@ -180,9 +180,7 @@ def test_sentiment_analysis():
             if status:
                 print_success(f"{service} connection successful")
             else:
-                print_warning(
-                    f"{service} connection failed (will use simulated data)"
-                )
+                print_warning(f"{service} connection failed (will use simulated data)")
 
         # Test sentiment analysis
         sentiment = collector.get_sentiment_for_stock("AAPL")
@@ -229,9 +227,7 @@ def test_web_application():
 def main():
     """Run all tests"""
     print_header("🚀 Real-Time Stock Market ML Project Setup Test")
-    print_info(
-        f"Test started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    print_info(f"Test started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     tests = [
         ("Module Imports", test_imports),
@@ -269,9 +265,7 @@ def main():
         print_error("❌ Several tests failed. Please check the setup guide.")
         print_info("See SETUP_GUIDE.md for detailed instructions.")
 
-    print_info(
-        f"\nTest completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    print_info(f"\nTest completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     return passed_tests == total_tests
 
