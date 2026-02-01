@@ -21,7 +21,7 @@ try:
     nltk.download("punkt", quiet=True)
     nltk.download("wordnet", quiet=True)
     nltk.download("vader_lexicon", quiet=True)
-except:
+except Exception:
     pass
 
 # Add parent directory to path
@@ -489,14 +489,14 @@ class NewsSentimentCollector:
                 results["news_api"] = response.status_code == 200
             else:
                 results["news_api"] = False
-        except:
+        except Exception:
             results["news_api"] = False
 
         # Test RSS feeds
         try:
             feed = feedparser.parse(self.rss_feeds[0])
             results["rss_feeds"] = len(feed.entries) > 0
-        except:
+        except Exception:
             results["rss_feeds"] = False
 
         return results
